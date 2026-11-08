@@ -1,0 +1,44 @@
+{
+  "name": "poly-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "start": "npm run build && electron .",
+    "test": "node --test tests/ui-state.test.mjs",
+    "test:desktop": "npm run build && node tests/desktop-integration.mjs",
+    "package:mac": "npm run build && .venv-build/bin/python scripts/build_backend.py && electron-builder --mac zip --arm64",
+    "test:packaged": "node tests/desktop-integration.mjs --packaged"
+  },
+  "main": "desktop/main.cjs",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^33.4.11",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.7.3",
+    "vite": "^6.0.5"
+  },
+  "build": {
+    "appId": "local.polytools.app",
+    "productName": "POLY TOOLS",
+    "asar": true,
+    "publish": null,
+    "directories": { "output": "release" },
+    "files": ["dist/**/*", "desktop/main.cjs", "desktop/preload.cjs", "assets/icon.png", "package.json"],
+    "extraResources": [{ "from": "build/backend/poly-backend", "to": "backend", "filter": ["**/*"] }],
+    "mac": {
+      "category": "public.app-category.music",
+      "icon": "assets/icon.icns",
+      "target": ["zip"],
+      "identity": null
+    }
+  }
+}
